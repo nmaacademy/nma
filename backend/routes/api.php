@@ -2,6 +2,7 @@
 
 use App\Http\Controllers\Api\Auth\AuthController;
 use App\Http\Controllers\Api\Auth\PasswordResetController;
+use App\Http\Controllers\Api\Admin\AdminAnnouncementController;
 use App\Http\Controllers\Api\Admin\AdminCourseController;
 use App\Http\Controllers\Api\Admin\AdminDashboardController;
 use App\Http\Controllers\Api\Course\PublicCourseController;
@@ -10,6 +11,11 @@ use App\Http\Controllers\Api\Course\VideoEventController;
 use App\Http\Controllers\Api\Course\VideoPlaybackController;
 use App\Http\Controllers\Api\Course\VideoPlaybackTokenController;
 use App\Http\Controllers\Api\Course\VideoProgressController;
+use App\Http\Controllers\Api\Course\CourseMembersController;
+use App\Http\Controllers\Api\Course\CommunityPostController;
+use App\Http\Controllers\Api\Course\CommunityReplyController;
+use App\Http\Controllers\Api\Course\CourseAnnouncementController;
+use App\Http\Controllers\Api\Course\CourseLeaderboardController;
 use App\Http\Controllers\Api\Course\WatchSessionController;
 use App\Http\Controllers\Api\Payment\NetopiaReturnController;
 use App\Http\Controllers\Api\Payment\NetopiaWebhookController;
@@ -90,6 +96,25 @@ Route::middleware(['auth:sanctum', 'session.activity'])->group(function () {
     Route::get('/user/courses',                                  [UserCourseController::class, 'index']);
     Route::get('/user/courses/{slug}',                           [UserCourseController::class, 'show']);
     Route::post('/user/courses/{slug}/enroll-test',              [UserCourseController::class, 'enrollTest']);
+    Route::get('/user/courses/{slug}/members',                   [CourseMembersController::class, 'index']);
+    Route::get('/user/courses/{slug}/announcements',             [CourseAnnouncementController::class, 'index']);
+    Route::get('/user/courses/{slug}/leaderboard',               [CourseLeaderboardController::class, 'index']);
+
+    // ── Community posts ───────────────────────────────────────────────────────
+    Route::get('/user/courses/{slug}/community/posts',           [CommunityPostController::class, 'index']);
+    Route::post('/user/courses/{slug}/community/posts',          [CommunityPostController::class, 'store'])
+        ->middleware('throttle:community-post');
+    Route::get('/user/courses/{slug}/community/posts/{post}',    [CommunityPostController::class, 'show']);
+    Route::delete('/user/courses/{slug}/community/posts/{post}', [CommunityPostController::class, 'destroy']);
+
+    Route::post(
+        '/user/courses/{slug}/community/posts/{post}/replies',
+        [CommunityReplyController::class, 'store']
+    )->middleware('throttle:community-reply');
+    Route::delete(
+        '/user/courses/{slug}/community/posts/{post}/replies/{reply}',
+        [CommunityReplyController::class, 'destroy']
+    );
 
     Route::post('/payments/checkout',                            [PaymentController::class, 'checkout']);
     Route::get('/payments/{orderId}/status',                     [PaymentController::class, 'status']);
@@ -119,6 +144,13 @@ Route::middleware(['auth:sanctum', 'session.activity'])->group(function () {
     Route::put('/admin/courses/{course}',           [AdminCourseController::class, 'update']);
     Route::post('/admin/courses/{course}/duplicate', [AdminCourseController::class, 'duplicate']);
     Route::post('/admin/courses/{course}/archive',   [AdminCourseController::class, 'archive']);
+
+    // ── Admin announcement management ─────────────────────────────────────────
+    Route::get('/admin/courses/{course}/announcements',  [AdminAnnouncementController::class, 'index']);
+    Route::post('/admin/courses/{course}/announcements', [AdminAnnouncementController::class, 'store']);
+    Route::get('/admin/announcements/{announcement}',    [AdminAnnouncementController::class, 'show']);
+    Route::put('/admin/announcements/{announcement}',    [AdminAnnouncementController::class, 'update']);
+    Route::delete('/admin/announcements/{announcement}', [AdminAnnouncementController::class, 'destroy']);
 
     Route::get('/admin/stats',                       [AdminDashboardController::class, 'stats']);
     Route::get('/admin/users',                       [AdminDashboardController::class, 'users']);

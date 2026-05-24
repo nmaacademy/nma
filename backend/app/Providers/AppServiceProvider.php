@@ -101,5 +101,17 @@ class AppServiceProvider extends ServiceProvider
             $key = ($request->user()?->id ?? '') . '|' . $request->ip();
             return Limit::perMinute(20)->by($key);
         });
+
+        // Community post creation: 5 posts per 10 minutes per user+course.
+        RateLimiter::for('community-post', function (Request $request) {
+            $key = ($request->user()?->id ?? $request->ip()) . '|' . $request->route('slug');
+            return Limit::perMinutes(10, 5)->by($key);
+        });
+
+        // Community reply creation: 10 replies per 10 minutes per user+course.
+        RateLimiter::for('community-reply', function (Request $request) {
+            $key = ($request->user()?->id ?? $request->ip()) . '|' . $request->route('slug');
+            return Limit::perMinutes(10, 10)->by($key);
+        });
     }
 }

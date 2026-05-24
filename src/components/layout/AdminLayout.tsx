@@ -1,14 +1,15 @@
 import { useState } from "react";
 import { Outlet, Link, useLocation, useNavigate } from "react-router-dom";
-import { 
-  LayoutDashboard, 
-  BookOpen, 
-  Users, 
-  Target, 
-  Mail, 
-  LogOut, 
-  Menu, 
-  X 
+import {
+  LayoutDashboard,
+  BookOpen,
+  Users,
+  Target,
+  Mail,
+  Megaphone,
+  LogOut,
+  Menu,
+  X
 } from "lucide-react";
 import { cn } from "../../lib/utils";
 import { motion, AnimatePresence } from "motion/react";
@@ -27,6 +28,7 @@ export default function AdminLayout() {
     { href: "/admin/users", label: "Users", icon: <Users className="w-5 h-5" /> },
     { href: "/admin/leads", label: "Leads", icon: <Target className="w-5 h-5" /> },
     { href: "/admin/email-campaigns", label: "Campanii", icon: <Mail className="w-5 h-5" /> },
+    { href: "/admin/announcements", label: "Anunțuri", icon: <Megaphone className="w-5 h-5" /> },
   ];
 
   const handleLogout = async () => {

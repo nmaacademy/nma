@@ -56,4 +56,14 @@ class Course extends Model
     {
         return $this->hasMany(UserCourse::class);
     }
+
+    public function communityPosts(): HasMany
+    {
+        return $this->hasMany(CourseCommunityPost::class);
+    }
+
+    public function announcements(): HasMany
+    {
+        return $this->hasMany(CourseAnnouncement::class);
+    }
 }

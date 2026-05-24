@@ -1,5 +1,5 @@
 import { Course } from "../types";
-import { apiGet, apiPost, apiPut, delay } from "../lib/apiClient";
+import { apiGet, apiPost, apiPut, delay, ApiError } from "../lib/apiClient";
 
 // ─── API response shapes ──────────────────────────────────────────────────────
 
@@ -165,6 +165,35 @@ interface ApiAdminCourse {
       } | null;
     }>;
   }>;
+}
+
+// ─── Mapping helpers ──────────────────────────────────────────────────────────
+
+// ─── Members API types ────────────────────────────────────────────────────────
+
+export interface CourseMember {
+  user_id: number;
+  name: string;
+  initials: string;
+  joined_at: string | null;
+  progress_percent: number | null;
+  completed_videos_count: number | null;
+  total_videos_count: number | null;
+}
+
+export interface CourseMembersResponse {
+  success: boolean;
+  message: string;
+  data: {
+    course: { id: number; title: string; slug: string };
+    members: CourseMember[];
+    meta: {
+      total: number;
+      current_page: number;
+      last_page: number;
+      per_page: number;
+    };
+  };
 }
 
 // ─── Mapping helpers ──────────────────────────────────────────────────────────
@@ -423,5 +452,23 @@ export const courseService = {
   markLessonComplete: async (_courseId: string, _lessonId: string): Promise<boolean> => {
     await delay(300);
     return true;
+  },
+
+  getCourseMembers: async (
+    slug: string,
+    opts: { search?: string; page?: number; perPage?: number } = {},
+  ): Promise<CourseMembersResponse> => {
+    const params = new URLSearchParams();
+    if (opts.search)   params.set('search',   opts.search);
+    if (opts.page)     params.set('page',      String(opts.page));
+    if (opts.perPage)  params.set('per_page',  String(opts.perPage));
+    const qs = params.toString();
+    const url = `/user/courses/${slug}/members${qs ? `?${qs}` : ''}`;
+    try {
+      return await apiGet<CourseMembersResponse>(url);
+    } catch (err) {
+      if (err instanceof ApiError) throw err;
+      throw err;
+    }
   },
 };

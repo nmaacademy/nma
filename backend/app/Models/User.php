@@ -99,6 +99,16 @@ class User extends Authenticatable
         return $this->hasMany(EmailLog::class);
     }
 
+    public function communityPosts(): HasMany
+    {
+        return $this->hasMany(CourseCommunityPost::class);
+    }
+
+    public function communityReplies(): HasMany
+    {
+        return $this->hasMany(CourseCommunityReply::class);
+    }
+
     // ─── State helpers ────────────────────────────────────────────────────────
 
     public function isVerified(): bool

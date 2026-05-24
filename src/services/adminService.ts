@@ -1,4 +1,4 @@
-import { apiGet, apiPost, apiPut } from "../lib/apiClient";
+import { apiGet, apiPost, apiPut, apiDelete } from "../lib/apiClient";
 import { Lead, User } from "../types";
 
 export interface AdminStats {
@@ -52,6 +52,47 @@ export interface AdminUserDetail extends User {
   }>;
 }
 
+// ─── Admin Announcement types ─────────────────────────────────────────────────
+
+export type AnnouncementStatus = "draft" | "published" | "hidden";
+
+export interface AdminAnnouncement {
+  id: number;
+  course_id: number;
+  title: string;
+  body_excerpt: string;
+  body?: string;
+  status: AnnouncementStatus;
+  is_pinned: boolean;
+  published_at: string | null;
+  created_at: string | null;
+  updated_at: string | null;
+  creator: { id: number; name: string } | null;
+}
+
+export interface AdminAnnouncementPayload {
+  title: string;
+  body: string;
+  status: AnnouncementStatus;
+  is_pinned?: boolean;
+  published_at?: string | null;
+}
+
+export interface AdminAnnouncementListParams {
+  page?: number;
+  per_page?: number;
+  status?: AnnouncementStatus | "";
+  search?: string;
+  pinned?: "0" | "1" | "";
+}
+
+export interface AdminAnnouncementMeta {
+  total: number;
+  current_page: number;
+  last_page: number;
+  per_page: number;
+}
+
 export const adminService = {
   getAdminStats: async (): Promise<AdminStats> => {
     const res = await apiGet<{ success: boolean; data: { stats: AdminStats } }>("/admin/stats");
@@ -98,5 +139,57 @@ export const adminService = {
       data: { sent_count: number; segment: string };
     }>("/admin/email-campaigns", payload);
     return res.data;
+  },
+
+  // ─── Announcements ─────────────────────────────────────────────────────────
+
+  getAdminCourseAnnouncements: async (
+    courseId: number,
+    params: AdminAnnouncementListParams = {},
+  ): Promise<{ announcements: AdminAnnouncement[]; meta: AdminAnnouncementMeta; course: { id: number; title: string; slug: string } }> => {
+    const qs = new URLSearchParams();
+    if (params.page)     qs.set("page", String(params.page));
+    if (params.per_page) qs.set("per_page", String(params.per_page));
+    if (params.status)   qs.set("status", params.status);
+    if (params.search)   qs.set("search", params.search);
+    if (params.pinned)   qs.set("pinned", params.pinned);
+    const query = qs.toString() ? `?${qs.toString()}` : "";
+    const res = await apiGet<{ success: boolean; data: { announcements: AdminAnnouncement[]; meta: AdminAnnouncementMeta; course: { id: number; title: string; slug: string } } }>(
+      `/admin/courses/${courseId}/announcements${query}`,
+    );
+    return res.data;
+  },
+
+  createAdminAnnouncement: async (
+    courseId: number,
+    payload: AdminAnnouncementPayload,
+  ): Promise<AdminAnnouncement> => {
+    const res = await apiPost<{ success: boolean; data: { announcement: AdminAnnouncement } }>(
+      `/admin/courses/${courseId}/announcements`,
+      payload,
+    );
+    return res.data.announcement;
+  },
+
+  getAdminAnnouncement: async (id: number): Promise<AdminAnnouncement> => {
+    const res = await apiGet<{ success: boolean; data: { announcement: AdminAnnouncement } }>(
+      `/admin/announcements/${id}`,
+    );
+    return res.data.announcement;
+  },
+
+  updateAdminAnnouncement: async (
+    id: number,
+    payload: AdminAnnouncementPayload,
+  ): Promise<AdminAnnouncement> => {
+    const res = await apiPut<{ success: boolean; data: { announcement: AdminAnnouncement } }>(
+      `/admin/announcements/${id}`,
+      payload,
+    );
+    return res.data.announcement;
+  },
+
+  deleteAdminAnnouncement: async (id: number): Promise<void> => {
+    await apiDelete<{ success: boolean }>(`/admin/announcements/${id}`);
   },
 };

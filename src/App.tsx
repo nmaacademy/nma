@@ -27,6 +27,7 @@ import AdminUsers from "./pages/admin/AdminUsers";
 import AdminUserDetail from "./pages/admin/AdminUserDetail";
 import AdminLeads from "./pages/admin/AdminLeads";
 import AdminEmailCampaigns from "./pages/admin/AdminEmailCampaigns";
+import AdminAnnouncements from "./pages/admin/AdminAnnouncements";
 
 export default function App() {
   return (
@@ -72,6 +73,7 @@ export default function App() {
             <Route path="users/:userId" element={<AdminUserDetail />} />
             <Route path="leads" element={<AdminLeads />} />
             <Route path="email-campaigns" element={<AdminEmailCampaigns />} />
+            <Route path="announcements" element={<AdminAnnouncements />} />
           </Route>
         </Route>
 
