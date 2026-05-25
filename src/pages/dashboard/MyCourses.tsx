@@ -34,7 +34,7 @@ function ProgressBar({ pct }: { pct: number }) {
   return (
     <div className="mt-3 space-y-1">
       <div className="flex justify-between text-xs">
-        <span className="text-gray-500">Progres</span>
+        <span className="text-nma-silver-dark/60">Progres</span>
         <span className={`font-mono font-bold ${pct >= 100 ? "text-green-400" : "text-nma-purple-light"}`}>
           {pct}%
         </span>
@@ -129,7 +129,7 @@ export default function MyCourses() {
           </div>
           <div>
             <p className="text-white font-bold mb-1">Eroare la încărcarea cursurilor</p>
-            <p className="text-gray-500 text-sm">Verifică conexiunea la internet și reîncarcă pagina.</p>
+            <p className="text-nma-silver-dark/60 text-sm">Verifică conexiunea la internet și reîncarcă pagina.</p>
           </div>
           <NmaGlassButton
             glow="neutral"
@@ -150,11 +150,11 @@ export default function MyCourses() {
       <div className="space-y-10">
         <div>
           <h1 className="text-3xl font-bold text-white mb-2">Toate Cursurile</h1>
-          <p className="text-gray-400">Nu există cursuri disponibile momentan.</p>
+          <p className="text-nma-silver-dark">Nu există cursuri disponibile momentan.</p>
         </div>
         <div className="flex flex-col items-center gap-4 py-16 text-center">
           <BookOpen className="w-12 h-12 text-gray-700" />
-          <p className="text-gray-500">Niciun curs nu este disponibil momentan.</p>
+          <p className="text-nma-silver-dark/60">Niciun curs nu este disponibil momentan.</p>
         </div>
       </div>
     );
@@ -169,7 +169,7 @@ export default function MyCourses() {
     <div className="space-y-12">
       <div>
         <h1 className="text-3xl font-bold text-white mb-2">Toate Cursurile</h1>
-        <p className="text-gray-400">Accesează materialele tale sau deblochează programe noi.</p>
+        <p className="text-nma-silver-dark">Accesează materialele tale sau deblochează programe noi.</p>
       </div>
 
       {/* ── Purchased courses ──────────────────────────────────────────────── */}
@@ -216,7 +216,7 @@ export default function MyCourses() {
                 {/* Content */}
                 <div className="p-6 relative z-20 flex flex-col">
                   <h3 className="text-xl font-bold text-white mb-2 line-clamp-2">{course.title}</h3>
-                  <p className="text-gray-400 text-sm mb-4 line-clamp-2">{course.description}</p>
+                  <p className="text-nma-silver-dark text-sm mb-4 line-clamp-2">{course.description}</p>
 
                   {/* Progress bar — only when backend reports progress */}
                   {!isLocked && progressPercent > 0 && (
@@ -225,7 +225,7 @@ export default function MyCourses() {
 
                   {/* Video count if available */}
                   {!isLocked && totalVideos > 0 && (
-                    <p className="text-[0.68rem] text-gray-600 mt-2">
+                    <p className="text-[0.68rem] text-nma-silver-dark/40 mt-2">
                       {completedVideos}/{totalVideos} lecții finalizate
                     </p>
                   )}
@@ -286,7 +286,7 @@ export default function MyCourses() {
                   <div className="absolute inset-0 bg-gradient-to-t from-[#141419] to-transparent z-10" />
 
                   {/* Locked badge */}
-                  <div className="absolute top-4 right-4 z-20 bg-black/60 border border-white/10 px-3 py-1 rounded-full text-xs font-bold uppercase text-gray-400 backdrop-blur-md flex items-center gap-1.5">
+                  <div className="absolute top-4 right-4 z-20 bg-black/60 border border-white/10 px-3 py-1 rounded-full text-xs font-bold uppercase text-nma-silver-dark backdrop-blur-md flex items-center gap-1.5">
                     <Lock className="w-3 h-3" /> Blocat
                   </div>
                 </div>
@@ -294,7 +294,7 @@ export default function MyCourses() {
                 {/* Content */}
                 <div className="p-6 relative z-20 flex flex-col">
                   <h3 className="text-xl font-bold text-white mb-2 line-clamp-2">{course.title}</h3>
-                  <p className="text-gray-400 text-sm mb-6 line-clamp-2 flex-1">{course.description}</p>
+                  <p className="text-nma-silver-dark text-sm mb-6 line-clamp-2 flex-1">{course.description}</p>
 
                   <div className="flex items-center justify-between gap-3">
                     <span className="text-2xl font-bold text-white">{course.price} &euro;</span>

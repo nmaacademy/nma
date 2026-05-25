@@ -17,7 +17,7 @@ export default function Benefits() {
               <h2 className="text-4xl md:text-5xl font-bold text-white mb-6 leading-tight">
                 Sistemul este conceput sa aduca <span className="text-transparent bg-clip-text bg-gradient-to-r from-nma-purple-light to-white">Rezultate.</span>
               </h2>
-              <p className="text-lg text-gray-400 mb-8 font-light">
+              <p className="text-lg text-nma-silver-dark mb-8 font-light">
                 Indiferent ca alegi E-Commerce sau Social Media, metodologia noastra se bazeaza pe numere, date si optimizare constanta. Nu lasam deciziile la voia intamplarii.
               </p>
               
@@ -31,7 +31,7 @@ export default function Benefits() {
                      <div className="w-1.5 h-1.5 rounded-full bg-nma-purple mt-2.5 shrink-0" />
                      <div>
                        <strong className="text-white block mb-1">{item.title}</strong>
-                       <span className="text-sm text-gray-400">{item.desc}</span>
+                       <span className="text-sm text-nma-silver-dark">{item.desc}</span>
                      </div>
                   </li>
                 ))}
@@ -43,12 +43,14 @@ export default function Benefits() {
               whileInView={{ opacity: 1, scale: 1 }}
               viewport={{ once: true }}
               transition={{ duration: 0.8 }}
-              className="relative aspect-square lg:aspect-auto lg:h-[37.5rem] rounded-3xl overflow-hidden glass-card flex flex-col justify-end p-8"
+              className="relative aspect-square lg:aspect-auto lg:h-[37.5rem] rounded-3xl overflow-hidden glass-card-purple flex flex-col justify-end p-8"
             >
-               {/* Decorative background image */}
-               <div className="absolute inset-0 bg-[url('https://images.unsplash.com/photo-1618044733300-9472054094ee?auto=format&fit=crop&q=80')] bg-cover bg-center opacity-30 mix-blend-luminosity" />
-               <div className="absolute inset-0 bg-gradient-to-t from-[#0a0a0c] via-[#0a0a0c]/60 to-transparent" />
-               <div className="absolute inset-0 shadow-[inset_0_0_100px_rgba(112,0,255,0.2)] pointer-events-none" />
+               {/* Premium dark background — no external dependencies */}
+               <div className="absolute inset-0 bg-gradient-to-br from-[#1a0a2e] via-[#0a0810] to-black" />
+               <div className="absolute inset-0 bg-[radial-gradient(ellipse_at_top_right,rgba(109,40,217,0.28)_0%,transparent_60%)]" />
+               <div className="absolute inset-0 opacity-[0.07]" style={{ backgroundImage: 'linear-gradient(rgba(139,92,246,0.6) 1px, transparent 1px), linear-gradient(90deg, rgba(139,92,246,0.6) 1px, transparent 1px)', backgroundSize: '48px 48px' }} />
+               <div className="absolute inset-0 bg-gradient-to-t from-[#0a0a0c] via-[#0a0a0c]/50 to-transparent" />
+               <div className="absolute inset-0 shadow-[inset_0_0_120px_rgba(112,0,255,0.25)] pointer-events-none" />
                
                <div className="relative z-10 border-l-2 border-nma-purple pl-6 py-2">
                  <p className="text-2xl font-bold text-white mb-2">"Succesul lasa indicii."</p>

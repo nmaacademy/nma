@@ -16,6 +16,7 @@ import Checkout from "./pages/checkout/Checkout";
 import PaymentPending from "./pages/checkout/PaymentPending";
 import PaymentSuccess from "./pages/checkout/PaymentSuccess";
 import PaymentFailed from "./pages/checkout/PaymentFailed";
+import CursorGlassBlob from "./components/ui/CursorGlassBlob";
 
 import { AuthProvider } from "./context/AuthContext";
 import AdminRoute from "./components/layout/AdminRoute";
@@ -33,6 +34,7 @@ export default function App() {
   return (
     <AuthProvider>
       <BrowserRouter>
+        <CursorGlassBlob />
         <Routes>
         <Route element={<MainLayout />}>
           <Route path="/" element={<Home />} />

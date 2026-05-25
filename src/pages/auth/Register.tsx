@@ -41,9 +41,12 @@ export default function Register() {
     setError(null);
     setLoading(true);
     try {
-      await authService.register({ name, email, password });
+      const res = await authService.register({ name, email, password });
       setStep("verify");
       setResendCooldown(60);
+      if (res.data.email_delivery_status === "failed") {
+        setVerifyError("Contul a fost creat, dar emailul cu codul nu a putut fi trimis. Incearca retrimiterea sau verifica setarile SMTP.");
+      }
     } catch (err: any) {
       const data = err?.data ?? {};
       // Show first field error if available, otherwise generic message
@@ -80,8 +83,9 @@ export default function Register() {
       const res = await authService.resendVerificationCode({ email });
       setResendMsg(res.message);
       setResendCooldown(60);
-    } catch {
-      setResendMsg("Nu s-a putut retrimite codul. Încearcă din nou.");
+    } catch (err: any) {
+      const data = err?.data ?? {};
+      setResendMsg(data.message ?? "Nu s-a putut retrimite codul. Incearca din nou.");
     }
   };
 
@@ -138,7 +142,7 @@ export default function Register() {
                 <button
                   type="submit"
                   disabled={verifyLoading || code.length < 6}
-                  className="w-full flex justify-center items-center py-3 px-4 border border-transparent rounded-xl text-sm font-bold text-white bg-gradient-to-br from-nma-dark to-nma-darker hover:border-nma-purple/50 focus:outline-none transition-all disabled:opacity-50"
+                  className="w-full flex justify-center items-center py-3 px-4 border border-transparent rounded-xl shadow-sm text-sm font-bold text-white bg-gradient-to-br from-nma-purple to-nma-purple-dark hover:brightness-110 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-nma-purple transition-all disabled:opacity-50"
                 >
                   {verifyLoading ? <LogoLoader size={22} minHeight={0} /> : <>Verifică codul <ArrowRight className="ml-2 h-4 w-4" /></>}
                 </button>
@@ -247,7 +251,7 @@ export default function Register() {
             <button
               type="submit"
               disabled={loading}
-              className="w-full flex justify-center items-center py-3 px-4 border border-transparent rounded-xl shadow-[0_0_20px_rgba(139,92,246,0.2)] text-sm font-bold text-white bg-gradient-to-br from-nma-dark to-nma-darker hover:border-nma-purple/50 focus:outline-none transition-all disabled:opacity-50"
+              className="w-full flex justify-center items-center py-3 px-4 border border-transparent rounded-xl shadow-sm text-sm font-bold text-white bg-gradient-to-br from-nma-purple to-nma-purple-dark hover:brightness-110 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-nma-purple transition-all disabled:opacity-50"
             >
               {loading ? <LogoLoader size={22} minHeight={0} /> : <>Crează Cont <ArrowRight className="ml-2 h-4 w-4" /></>}
             </button>

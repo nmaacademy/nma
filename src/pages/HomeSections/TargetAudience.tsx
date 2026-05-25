@@ -27,7 +27,7 @@ export default function TargetAudience() {
               ].map((text, i) => (
                 <div key={i} className="flex items-start gap-4 p-4 rounded-2xl bg-white/[0.02] border border-white/[0.05]">
                   <X className="w-5 h-5 text-red-500/50 shrink-0 mt-0.5" />
-                  <span className="text-gray-400">{text}</span>
+                  <span className="text-nma-silver-dark">{text}</span>
                 </div>
               ))}
             </div>

@@ -4,6 +4,25 @@ import { Save, ArrowLeft, Plus, Trash2, GripVertical } from "lucide-react";
 import { Course, CourseModule, Lesson } from "../../types";
 import { courseService } from "../../services/courseService";
 import LogoLoader from "../../components/ui/LogoLoader";
+import { ApiError } from "../../lib/apiClient";
+
+function slugify(value: string): string {
+  return value
+    .toLowerCase()
+    .normalize("NFD")
+    .replace(/[\u0300-\u036f]/g, "")
+    .replace(/[^a-z0-9]+/g, "-")
+    .replace(/^-+|-+$/g, "");
+}
+
+function getSaveErrorMessage(error: unknown): string {
+  if (error instanceof ApiError) {
+    const firstFieldError = (Object.values(error.data?.errors ?? {})?.[0] as string[] | undefined)?.[0];
+    return firstFieldError ?? error.data?.message ?? "Nu s-a putut salva cursul.";
+  }
+
+  return "Nu s-a putut salva cursul.";
+}
 
 export default function AdminCourseForm() {
   const { courseId } = useParams();
@@ -12,6 +31,7 @@ export default function AdminCourseForm() {
 
   const [loading, setLoading] = useState(isEdit);
   const [saving, setSaving] = useState(false);
+  const [error, setError] = useState<string | null>(null);
 
   const [course, setCourse] = useState<Partial<Course>>({
     title: "",
@@ -38,7 +58,16 @@ export default function AdminCourseForm() {
   }, [courseId, isEdit]);
 
   const handleChange = (e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>) => {
-    setCourse({ ...course, [e.target.name]: e.target.value });
+    const { name, value } = e.target;
+    setCourse((current) => {
+      const next = { ...current, [name]: value };
+
+      if (name === "title" && !current.slug) {
+        next.slug = slugify(value);
+      }
+
+      return next;
+    });
   };
 
   const setListField = (
@@ -52,6 +81,7 @@ export default function AdminCourseForm() {
   };
 
   const handleSave = async () => {
+    setError(null);
     setSaving(true);
     try {
       if (isEdit && courseId) {
@@ -62,7 +92,7 @@ export default function AdminCourseForm() {
       navigate('/admin/courses');
     } catch (e) {
       console.error(e);
-      alert("Error saving course");
+      setError(getSaveErrorMessage(e));
     } finally {
       setSaving(false);
     }
@@ -148,6 +178,12 @@ export default function AdminCourseForm() {
           {saving ? <LogoLoader size={22} minHeight={0} /> : <><Save className="w-4 h-4" /> Save Changes</>}
         </button>
       </div>
+
+      {error && (
+        <div className="rounded-xl border border-red-500/30 bg-red-500/10 px-4 py-3 text-sm text-red-200">
+          {error}
+        </div>
+      )}
 
       <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
         <div className="lg:col-span-2 space-y-6">

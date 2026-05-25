@@ -10,9 +10,9 @@ export default function Footer() {
         <div className="col-span-1 md:col-span-2 space-y-6">
           <div className="flex items-center gap-3">
              <NmaLogo imageClassName="w-16 opacity-90" />
-             <span className="font-bold tracking-[0.2em] text-white">NOUA MEA AFACERE</span>
+             <span className="font-bold tracking-[0.18em] text-white">NMA ACADEMY</span>
           </div>
-          <p className="text-nma-silver-dark max-w-sm text-sm leading-relaxed">
+          <p className="text-nma-silver-dark/80 max-w-sm text-sm leading-relaxed">
             Platforma premium pentru cei care vor sa construiasca o afacere reala, nu doar sa viseze. Nu e timp de joaca.
           </p>
         </div>

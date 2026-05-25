@@ -102,13 +102,13 @@ export default function Checkout() {
     return (
       <div className="min-h-[100dvh] bg-[#030305] flex flex-col items-center justify-center p-6 pt-20">
         <h1 className="text-2xl font-bold text-white mb-4">Eroare</h1>
-        <p className="text-gray-400 text-center">Cursul nu a fost găsit pentru checkout.</p>
+        <p className="text-nma-silver-dark text-center">Cursul nu a fost găsit pentru checkout.</p>
         <NmaGlassButton
           glow="neutral"
           onClick={() => navigate("/")}
           className="mt-6 px-5 py-2.5 rounded-xl text-sm font-medium"
         >
-          Return to home
+          Înapoi acasă
         </NmaGlassButton>
       </div>
     );
@@ -132,10 +132,10 @@ export default function Checkout() {
                 <ShieldCheck className="w-5 h-5 text-nma-purple" /> Detalii Facturare
               </h2>
               <div className="space-y-4">
-                <p className="text-sm text-gray-400">Autentificat ca:</p>
+                <p className="text-sm text-nma-silver-dark">Autentificat ca:</p>
                 <div className="p-4 bg-white/5 rounded-xl border border-white/10 flex flex-col">
                   <span className="text-white font-medium">{user?.name}</span>
-                  <span className="text-gray-400 text-sm">{user?.email}</span>
+                  <span className="text-nma-silver-dark text-sm">{user?.email}</span>
                 </div>
                 <p className="text-xs text-gray-500 mt-2">
                   Aceste detalii vor fi folosite pentru a genera factura fiscală în Oblio după finalizarea plății cu Netopia. Vă rugăm să vă asigurați referintele din profil. <br/>
@@ -151,18 +151,18 @@ export default function Checkout() {
               <h2 className="text-xl font-bold text-white mb-6 border-b border-white/10 pb-4 flex items-center gap-2">
                 <CreditCard className="w-5 h-5 text-nma-purple" /> Plata Securizata Netopia
               </h2>
-              <p className="text-sm text-gray-400 mb-4">
+              <p className="text-sm text-nma-silver-dark mb-4">
                 Urmatorul pas te va redirecționa către procesatorul de plăți sigur Netopia Payments. Nu stocăm datele cardului.
               </p>
               <div className="mb-4 rounded-xl border border-white/10 bg-white/5 p-4">
-                <p className="text-sm text-gray-300">
+                <p className="text-sm text-nma-silver">
                   Datele cardului se introduc doar in pagina securizata Netopia. NMA nu vede si nu stocheaza date de card.
                 </p>
               </div>
               {paymentError && <p className="text-sm text-red-300 mb-4">{paymentError}</p>}
               <div className="flex gap-4 items-center">
-                <div className="w-12 h-8 bg-gray-800 rounded flex items-center justify-center text-[0.625rem] font-bold text-gray-400">VISA</div>
-                <div className="w-12 h-8 bg-gray-800 rounded flex items-center justify-center text-[0.625rem] font-bold text-gray-400">MC</div>
+                <div className="w-12 h-8 bg-gray-800 rounded flex items-center justify-center text-[0.625rem] font-bold text-nma-silver-dark">VISA</div>
+                <div className="w-12 h-8 bg-gray-800 rounded flex items-center justify-center text-[0.625rem] font-bold text-nma-silver-dark">MC</div>
                 <Lock className="w-4 h-4 text-gray-500 ml-auto" />
               </div>
             </NmaGlassSurface>
@@ -176,13 +176,13 @@ export default function Checkout() {
                  <img src={course.thumbnail} alt="thumbnail" className="w-16 h-16 object-cover rounded-xl border border-white/10" />
                  <div>
                    <h4 className="text-white font-medium text-sm">{course.title}</h4>
-                   <p className="text-gray-400 text-xs">Acces pe viață</p>
+                   <p className="text-nma-silver-dark text-xs">Acces pe viață</p>
                  </div>
                </div>
                
                <div className="border-t border-white/10 pt-4 mb-4 space-y-2">
                  <div className="flex justify-between text-sm">
-                   <span className="text-gray-400">Subtotal</span>
+                   <span className="text-nma-silver-dark">Subtotal</span>
                    <span className="text-white">{course.price} {currency}</span>
                  </div>
                  {discountPercentage > 0 && (
@@ -195,13 +195,13 @@ export default function Checkout() {
                
                <div className="border-t border-white/10 pt-4 mb-6">
                  <div className="flex justify-between items-baseline">
-                   <span className="text-gray-300 font-medium">Total</span>
+                   <span className="text-nma-silver font-medium">Total</span>
                    <span className="text-2xl font-bold text-white">{totalAmount} {currency}</span>
                  </div>
                </div>
                
                <div className="mb-6">
-                 <label className="text-xs text-gray-400 block mb-2">Cod de reducere (Demo: NMA20)</label>
+                 <label className="text-xs text-nma-silver-dark block mb-2">Cod de reducere (Demo: NMA20)</label>
                  <div className="flex gap-2">
                    <input 
                      type="text" 

@@ -1,4 +1,4 @@
-export const API_BASE_URL = (import.meta as any).env?.VITE_API_URL || 'http://127.0.0.1:8080/api';
+export const API_BASE_URL = (import.meta as any).env?.VITE_API_URL || 'http://127.0.0.1:8000/api';
 
 /** Helper delay for mock usage only. */
 export const delay = (ms: number) => new Promise((resolve) => setTimeout(resolve, ms));

@@ -31,7 +31,7 @@ export default function PaymentSuccess() {
           </motion.div>
 
           <h1 className="text-3xl font-bold text-white mb-2 relative z-10">Plata confirmata</h1>
-          <p className="text-gray-400 mb-8 relative z-10">
+          <p className="text-nma-silver-dark mb-8 relative z-10">
             Multumim pentru comanda. Accesul tau la curs a fost activat dupa confirmarea platii Netopia.
           </p>
 

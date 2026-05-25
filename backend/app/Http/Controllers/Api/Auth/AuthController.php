@@ -36,14 +36,17 @@ class AuthController extends Controller
             'email_verification_attempts'   => 0,
         ]);
 
-        $this->sendVerificationCode($user, $code);
+        $emailSent = $this->sendVerificationCode($user, $code);
 
         return response()->json([
             'success' => true,
-            'message' => 'Contul a fost creat. Te rugam sa verifici adresa de email folosind codul primit.',
+            'message' => $emailSent
+                ? 'Contul a fost creat. Te rugam sa verifici adresa de email folosind codul primit.'
+                : 'Contul a fost creat, dar emailul cu codul de verificare nu a putut fi trimis. Incearca retrimiterea codului.',
             'data'    => [
                 'email'                => $user->email,
                 'requires_verification' => true,
+                'email_delivery_status' => $emailSent ? 'sent' : 'failed',
             ],
         ], 201);
     }
@@ -303,7 +306,12 @@ class AuthController extends Controller
             'email_verification_blocked_until' => null,
         ]);
 
-        $this->sendVerificationCode($user, $code);
+        if (! $this->sendVerificationCode($user, $code)) {
+            return response()->json([
+                'success' => false,
+                'message' => 'Nu s-a putut trimite codul de verificare. Verifica setarile SMTP si incearca din nou.',
+            ], 502);
+        }
 
         return $genericResponse;
     }
@@ -392,7 +400,7 @@ class AuthController extends Controller
     }
 
     /** Send the verification code email and write an email_logs row. */
-    private function sendVerificationCode(User $user, string $code): void
+    private function sendVerificationCode(User $user, string $code): bool
     {
         $subject      = 'Codul tău de verificare — NMA Academy';
         $status       = 'sent';
@@ -414,5 +422,7 @@ class AuthController extends Controller
             'error_message'   => $errorMessage,
             'sent_at'         => now(),
         ]);
+
+        return $status === 'sent';
     }
 }

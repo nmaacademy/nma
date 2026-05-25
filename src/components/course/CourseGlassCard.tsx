@@ -1,4 +1,4 @@
-import { motion } from "framer-motion"; // Am corectat importul de la motion/react la framer-motion (standard)
+import { motion } from "framer-motion";
 import { ArrowRight, CheckCircle2 } from "lucide-react";
 import { Course } from "../../types";
 import { NmaGlassButton, NmaGlassSurface } from "../ui/nma-glass";
@@ -21,8 +21,7 @@ export function CourseGlassCard({
       whileInView={{ opacity: 1, y: 0 }}
       viewport={{ once: true, margin: "-100px" }}
       transition={{ duration: 0.7, delay: index * 0.2 }}
-      // Am adăugat max-w-[550px] și mx-auto ca să nu se mai întindă urât când e un singur curs
-      className="group relative rounded-[2rem] overflow-visible cursor-pointer w-full max-w-[550px] mx-auto h-full flex flex-col"
+      className="group relative rounded-[2rem] overflow-visible cursor-pointer w-full max-w-[440px] mx-auto h-full flex flex-col"
       onClick={onPreview}
     >
       <div className="absolute inset-0 rounded-[2rem] bg-gradient-to-b from-white/10 via-white/0 to-white/0 z-0 pointer-events-none" />
@@ -34,11 +33,8 @@ export function CourseGlassCard({
         tone="clear"
         className="h-full w-full flex flex-col relative z-10 rounded-[2rem]"
       >
-        {/* AICI ERA PROBLEMA 1: Am schimbat rounded-[inherit] cu rounded-[2rem] */}
         <div className="h-full flex flex-col overflow-hidden rounded-[2rem]">
-          
-          {/* AICI ERA PROBLEMA 2: Am schimbat rounded-t-[inherit] cu rounded-t-[2rem] pentru imagine */}
-          <div className="h-48 md:h-64 overflow-hidden relative rounded-t-[2rem]">
+          <div className="h-[9.5rem] md:h-[12.75rem] overflow-hidden relative rounded-t-[2rem]">
             <div className="absolute inset-0 bg-nma-dark/30 z-10" />
             <div className="absolute inset-x-0 bottom-0 h-28 bg-gradient-to-t from-[#0a0a0c]/95 via-[#0a0a0c]/70 to-transparent z-10" />
             <img
@@ -49,35 +45,35 @@ export function CourseGlassCard({
             <NmaGlassSurface
               radius="xl"
               tone="purple"
-              className="absolute top-6 right-6 z-20 px-4 py-2 rounded-full"
+              className="absolute top-5 right-5 z-20 px-3 py-1.5 rounded-full"
             >
-              <span className="text-white font-semibold">{course.price} &euro;</span>
+              <span className="text-sm text-white font-semibold">{course.price} &euro;</span>
             </NmaGlassSurface>
           </div>
 
-          <div className="p-8 md:p-10 flex-1 flex flex-col pointer-events-none bg-[#0a0a0c]/40">
+          <div className="p-6 md:p-8 flex-1 flex flex-col pointer-events-none bg-[#0a0a0c]/40">
             <span className="text-[0.75rem] text-nma-purple-light font-semibold uppercase block mb-2 tracking-widest">
               Masterclass
             </span>
-            <h3 className="text-[2rem] font-bold text-white mb-2 leading-tight">
+            <h3 className="text-[1.6rem] font-bold text-white mb-2 leading-tight">
               {course.title}
             </h3>
-            <p className="text-nma-silver opacity-70 mb-8 leading-relaxed">
+            <p className="text-sm md:text-[0.95rem] text-nma-silver opacity-70 mb-6 leading-relaxed">
               {course.description}
             </p>
 
-            <div className="space-y-4 mb-10 flex-1">
+            <div className="space-y-3 mb-8 flex-1">
               {course.features?.map((feature: string, i: number) => (
                 <div key={i} className="flex items-start gap-3">
-                  <CheckCircle2 className="w-5 h-5 text-nma-purple shrink-0 mt-0.5" />
-                  <span className="text-sm md:text-base text-gray-300">{feature}</span>
+                  <CheckCircle2 className="w-4 h-4 text-nma-purple shrink-0 mt-0.5" />
+                  <span className="text-sm text-gray-300">{feature}</span>
                 </div>
               ))}
             </div>
 
             <NmaGlassButton
               glow="purple"
-              className="w-full py-4 rounded-xl transition-all duration-300 font-semibold flex items-center justify-center gap-2 group/btn pointer-events-auto"
+              className="w-full py-3 rounded-xl transition-all duration-300 font-semibold flex items-center justify-center gap-2 group/btn pointer-events-auto"
             >
               Vezi Programul
               <ArrowRight className="w-4 h-4 group-hover/btn:translate-x-1 transition-transform" />

@@ -33,7 +33,7 @@ export default function Testimonials() {
               whileInView={{ opacity: 1, y: 0 }}
               viewport={{ once: true }}
               transition={{ delay: idx * 0.15, duration: 0.6 }}
-              className="p-8 rounded-[2rem] bg-white/[0.02] border border-white/5 flex flex-col justify-between h-full"
+              className="p-8 rounded-[2rem] bg-[#141419]/80 border border-white/[0.08] shadow-[0_0_30px_rgba(139,92,246,0.06),inset_0_1px_0_rgba(255,255,255,0.08)] hover:border-nma-purple/30 hover:shadow-[0_0_40px_rgba(139,92,246,0.14),inset_0_1px_0_rgba(255,255,255,0.1)] transition-all duration-500 flex flex-col justify-between h-full group"
             >
               <div>
                 <div className="flex gap-1 mb-6">
@@ -41,9 +41,9 @@ export default function Testimonials() {
                     <Star key={i} className="w-4 h-4 fill-nma-purple text-nma-purple" />
                   ))}
                 </div>
-                <p className="text-gray-300 italic leading-relaxed mb-8">"{test.text}"</p>
+                <p className="text-nma-silver opacity-80 italic leading-relaxed mb-8">"{test.text}"</p>
               </div>
-              <div className="pt-6 border-t border-white/5">
+              <div className="pt-6 border-t border-white/[0.08]">
                 <strong className="text-white block">{test.name}</strong>
                 <span className="text-nma-purple-light text-sm">{test.role}</span>
               </div>

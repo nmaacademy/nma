@@ -16,7 +16,7 @@ export interface LoginResponse {
 export interface RegisterResponse {
   success: boolean;
   message: string;
-  data: { email: string; requires_verification: boolean };
+  data: { email: string; requires_verification: boolean; email_delivery_status?: "sent" | "failed" };
 }
 
 export interface ApiResponse {

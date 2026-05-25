@@ -11,8 +11,8 @@ export default function FAQ() {
     <section id="faq" className="py-24 bg-[#050506] border-t border-white/5">
       <div className="max-w-4xl mx-auto px-6">
         <div className="text-center mb-16">
-          <h2 className="text-3xl md:text-4xl font-bold text-white mb-4">Intrebari Frecvente</h2>
-          <p className="text-gray-400">Clarifica-ti dubiile si ia o decizie informata.</p>
+          <h2 className="text-3xl md:text-4xl font-bold text-white mb-4 tracking-tight">Intrebari Frecvente</h2>
+          <p className="text-nma-silver-dark">Clarifica-ti dubiile si ia o decizie informata.</p>
         </div>
 
         <div className="space-y-4">
@@ -47,7 +47,7 @@ export default function FAQ() {
                       exit={{ height: 0, opacity: 0 }}
                       className="overflow-hidden"
                     >
-                      <div className="px-6 pb-6 text-gray-400 leading-relaxed">
+                      <div className="px-6 pb-6 text-nma-silver-dark leading-relaxed">
                         {faq.answer}
                       </div>
                     </motion.div>

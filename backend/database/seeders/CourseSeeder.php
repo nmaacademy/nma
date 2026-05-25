@@ -13,7 +13,7 @@ class CourseSeeder extends Seeder
     public function run(): void
     {
         // ── Course ────────────────────────────────────────────────────────────
-        $course = Course::updateOrCreate(
+        $course = Course::withTrashed()->updateOrCreate(
             ['slug' => 'nma-academy-curs-complet'],
             [
                 'title'             => 'NMA Academy - Curs Complet',
@@ -49,6 +49,7 @@ class CourseSeeder extends Seeder
                 ],
             ]
         );
+        $course->restore();
 
         // ── Categories ────────────────────────────────────────────────────────
         $categories = [
@@ -216,24 +217,26 @@ class CourseSeeder extends Seeder
             $subcatsData = $catData['subcategories'];
             unset($catData['subcategories']);
 
-            $category = CourseCategory::updateOrCreate(
+            $category = CourseCategory::withTrashed()->updateOrCreate(
                 ['course_id' => $course->id, 'slug' => $catData['slug']],
                 array_merge($catData, ['course_id' => $course->id])
             );
+            $category->restore();
 
             foreach ($subcatsData as $subData) {
                 $videoData = $subData['video'];
                 unset($subData['video']);
 
-                $subcategory = CourseSubcategory::updateOrCreate(
+                $subcategory = CourseSubcategory::withTrashed()->updateOrCreate(
                     ['category_id' => $category->id, 'slug' => $subData['slug']],
                     array_merge($subData, [
                         'course_id'   => $course->id,
                         'category_id' => $category->id,
                     ])
                 );
+                $subcategory->restore();
 
-                CourseVideo::updateOrCreate(
+                $video = CourseVideo::withTrashed()->updateOrCreate(
                     ['subcategory_id' => $subcategory->id],
                     array_merge($videoData, [
                         'course_id'      => $course->id,
@@ -241,6 +244,7 @@ class CourseSeeder extends Seeder
                         'subcategory_id' => $subcategory->id,
                     ])
                 );
+                $video->restore();
             }
         }
     }

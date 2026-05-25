@@ -30,7 +30,7 @@ export default function Deliverables() {
       <div className="max-w-7xl mx-auto px-6 relative z-10">
         <div className="text-center mb-16">
           <h2 className="text-3xl md:text-5xl font-bold text-white mb-4">Ce incluzi in arsenalul tau</h2>
-          <p className="text-gray-400 max-w-2xl mx-auto">Nu vindem doar teorie. Oferim un ecosistem complet pentru succes.</p>
+          <p className="text-nma-silver-dark max-w-2xl mx-auto">Nu vindem doar teorie. Oferim un ecosistem complet pentru succes.</p>
         </div>
 
         <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6">
@@ -41,7 +41,7 @@ export default function Deliverables() {
               whileInView={{ opacity: 1, y: 0 }}
               viewport={{ once: true }}
               transition={{ delay: idx * 0.1, duration: 0.6 }}
-              className="p-8 rounded-[2rem] bg-white/[0.02] border border-white/[0.05] hover:bg-white/[0.04] transition-colors relative overflow-hidden group"
+              className="p-8 rounded-[2rem] bg-[#0e0e14]/80 border border-white/[0.07] hover:border-nma-purple/25 hover:shadow-[0_0_40px_rgba(139,92,246,0.1),inset_0_1px_0_rgba(255,255,255,0.07)] transition-all duration-500 relative overflow-hidden group"
             >
               <div className="absolute top-0 right-0 p-8 opacity-5 group-hover:opacity-10 transition-opacity group-hover:scale-110 duration-500">
                 {item.icon}
@@ -50,7 +50,7 @@ export default function Deliverables() {
                 {item.icon}
               </div>
               <h3 className="text-xl font-bold text-white mb-3">{item.title}</h3>
-              <p className="text-sm text-gray-400 leading-relaxed">{item.desc}</p>
+              <p className="text-sm text-nma-silver-dark leading-relaxed">{item.desc}</p>
             </motion.div>
           ))}
         </div>

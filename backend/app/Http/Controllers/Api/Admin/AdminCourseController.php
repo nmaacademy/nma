@@ -11,7 +11,7 @@ use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Str;
-use Illuminate\Validation\Rule;
+use Illuminate\Validation\ValidationException;
 
 class AdminCourseController extends Controller
 {
@@ -158,45 +158,135 @@ class AdminCourseController extends Controller
 
     private function validatedPayload(Request $request, ?Course $course = null): array
     {
-        return $request->validate([
-            'title'              => ['required', 'string', 'max:255'],
-            'slug'               => ['required', 'string', 'max:255', Rule::unique('courses', 'slug')->ignore($course?->id)],
-            'description'        => ['nullable', 'string'],
-            'short_description'  => ['nullable', 'string', 'max:255'],
-            'price'              => ['required', 'numeric', 'min:0'],
-            'currency'           => ['nullable', 'string', 'max:10'],
-            'thumbnail'          => ['nullable', 'string', 'max:2048'],
-            'status'             => ['nullable', Rule::in(['draft', 'published', 'archived'])],
-            'features'           => ['nullable', 'array'],
-            'features.*'         => ['string', 'max:255'],
-            'target_audience'    => ['nullable', 'array'],
-            'target_audience.*'  => ['string', 'max:255'],
-            'results_promised'   => ['nullable', 'array'],
-            'results_promised.*' => ['string', 'max:255'],
-            'modules'            => ['nullable', 'array'],
-            'modules.*.module_id' => ['nullable'],
-            'modules.*.title'    => ['required_with:modules', 'string', 'max:255'],
-            'modules.*.description' => ['nullable', 'string'],
-            'modules.*.order'    => ['nullable', 'integer', 'min:0'],
-            'modules.*.is_free_preview' => ['nullable', 'boolean'],
-            'modules.*.lessons'  => ['nullable', 'array'],
-            'modules.*.lessons.*.lesson_id' => ['nullable'],
-            'modules.*.lessons.*.title' => ['required_with:modules.*.lessons', 'string', 'max:255'],
-            'modules.*.lessons.*.description' => ['nullable', 'string'],
-            'modules.*.lessons.*.duration_minutes' => ['nullable', 'integer', 'min:0'],
-            'modules.*.lessons.*.order' => ['nullable', 'integer', 'min:0'],
-            'modules.*.lessons.*.is_free_preview' => ['nullable', 'boolean'],
-            'modules.*.lessons.*.video_url' => ['nullable', 'string', 'max:2048'],
-        ]);
+        $input = $request->all();
+        $errors = [];
+
+        $addError = function (string $field, string $message) use (&$errors): void {
+            $errors[$field][] = $message;
+        };
+
+        $title = trim((string) ($input['title'] ?? ''));
+        if ($title === '') {
+            $addError('title', 'Titlul cursului este obligatoriu.');
+        } elseif (mb_strlen($title) > 255) {
+            $addError('title', 'Titlul cursului nu poate depasi 255 de caractere.');
+        }
+
+        $slugInput = trim((string) ($input['slug'] ?? ''));
+        $slug = Str::slug($slugInput !== '' ? $slugInput : $title);
+        if ($slug === '') {
+            $addError('slug', 'Slug-ul nu poate fi generat. Completeaza titlul sau slug-ul manual.');
+        } elseif (mb_strlen($slug) > 255) {
+            $addError('slug', 'Slug-ul nu poate depasi 255 de caractere.');
+        } else {
+            $slugQuery = Course::where('slug', $slug);
+
+            if ($course) {
+                $slugQuery->whereKeyNot($course->id);
+            }
+
+            $slugExists = $slugQuery->exists();
+
+            if ($slugExists) {
+                $addError('slug', 'Exista deja un curs cu acest slug.');
+            }
+        }
+
+        $price = $input['price'] ?? null;
+        if (! is_numeric($price) || (float) $price < 0) {
+            $addError('price', 'Pretul trebuie sa fie un numar pozitiv.');
+        }
+
+        $status = $input['status'] ?? 'published';
+        if (! in_array($status, ['draft', 'published', 'archived'], true)) {
+            $addError('status', 'Statusul cursului este invalid.');
+        }
+
+        $currency = (string) ($input['currency'] ?? 'RON');
+        if (mb_strlen($currency) > 10) {
+            $addError('currency', 'Moneda nu poate depasi 10 caractere.');
+        }
+
+        foreach (['short_description' => 255, 'thumbnail' => 2048] as $field => $max) {
+            if (isset($input[$field]) && mb_strlen((string) $input[$field]) > $max) {
+                $addError($field, "Campul nu poate depasi {$max} de caractere.");
+            }
+        }
+
+        foreach (['features', 'target_audience', 'results_promised'] as $field) {
+            if (isset($input[$field]) && ! is_array($input[$field])) {
+                $addError($field, 'Campul trebuie sa fie o lista.');
+                continue;
+            }
+
+            foreach (($input[$field] ?? []) as $index => $value) {
+                if (mb_strlen((string) $value) > 255) {
+                    $addError("{$field}.{$index}", 'Textul nu poate depasi 255 de caractere.');
+                }
+            }
+        }
+
+        if (isset($input['modules']) && ! is_array($input['modules'])) {
+            $addError('modules', 'Modulele trebuie sa fie o lista.');
+        }
+
+        foreach (($input['modules'] ?? []) as $moduleIndex => $module) {
+            if (! is_array($module)) {
+                $addError("modules.{$moduleIndex}", 'Modul invalid.');
+                continue;
+            }
+
+            $moduleTitle = trim((string) ($module['title'] ?? ''));
+            if ($moduleTitle === '') {
+                $addError("modules.{$moduleIndex}.title", 'Titlul modulului este obligatoriu.');
+            } elseif (mb_strlen($moduleTitle) > 255) {
+                $addError("modules.{$moduleIndex}.title", 'Titlul modulului nu poate depasi 255 de caractere.');
+            }
+
+            if (isset($module['lessons']) && ! is_array($module['lessons'])) {
+                $addError("modules.{$moduleIndex}.lessons", 'Lectiile trebuie sa fie o lista.');
+                continue;
+            }
+
+            foreach (($module['lessons'] ?? []) as $lessonIndex => $lesson) {
+                if (! is_array($lesson)) {
+                    $addError("modules.{$moduleIndex}.lessons.{$lessonIndex}", 'Lectie invalida.');
+                    continue;
+                }
+
+                $lessonTitle = trim((string) ($lesson['title'] ?? ''));
+                if ($lessonTitle === '') {
+                    $addError("modules.{$moduleIndex}.lessons.{$lessonIndex}.title", 'Titlul lectiei este obligatoriu.');
+                } elseif (mb_strlen($lessonTitle) > 255) {
+                    $addError("modules.{$moduleIndex}.lessons.{$lessonIndex}.title", 'Titlul lectiei nu poate depasi 255 de caractere.');
+                }
+
+                if (isset($lesson['video_url']) && mb_strlen((string) $lesson['video_url']) > 2048) {
+                    $addError("modules.{$moduleIndex}.lessons.{$lessonIndex}.video_url", 'URL-ul video este prea lung.');
+                }
+            }
+        }
+
+        if ($errors !== []) {
+            throw ValidationException::withMessages($errors);
+        }
+
+        $input['title'] = $title;
+        $input['slug'] = $slug;
+        $input['price'] = (float) $price;
+        $input['currency'] = $currency ?: 'RON';
+        $input['status'] = $status;
+        $input['modules'] = $input['modules'] ?? [];
+
+        return $input;
     }
 
     private function courseAttributes(array $payload, ?int $createdBy): array
     {
         $status = $payload['status'] ?? 'published';
-
         return [
             'title'             => $payload['title'],
-            'slug'              => Str::slug($payload['slug']),
+            'slug'              => $payload['slug'],
             'short_description' => $payload['short_description'] ?? Str::limit((string) ($payload['description'] ?? $payload['title']), 220),
             'description'       => $payload['description'] ?? null,
             'price'             => $payload['price'],

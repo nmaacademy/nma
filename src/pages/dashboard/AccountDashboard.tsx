@@ -1,6 +1,6 @@
 import React from "react";
 import { Link, useNavigate } from "react-router-dom";
-import { ArrowRight, BookOpen, Clock, AlertTriangle } from "lucide-react";
+import { ArrowRight, BookOpen } from "lucide-react";
 import { userService, UserProfile } from "../../services/userService";
 import { courseService } from "../../services/courseService";
 import { UserCourse, Course } from "../../types";
@@ -35,49 +35,57 @@ export default function AccountDashboard() {
   const availableCourses = allCourses.filter(c => !purchaseMap.has(c.course_id));
 
   return (
-    <div className="space-y-10">
-      
-      {/* Hello Section */}
-      <div>
-        <h1 className="text-3xl font-bold text-white mb-2">Salut, {user.name.split(' ')[0]}</h1>
-        <p className="text-gray-400">Nu e timp de joacă. Să continuăm construcția.</p>
+    <div className="space-y-12">
+
+      {/* Hero greeting */}
+      <div className="relative">
+        <div className="absolute -top-8 -left-6 w-80 h-40 bg-nma-purple/10 blur-[4rem] rounded-full pointer-events-none" />
+        <span className="text-nma-purple font-bold text-[0.7rem] uppercase tracking-[0.35em] block mb-3">
+          Bun venit înapoi
+        </span>
+        <h1 className="text-5xl md:text-6xl font-black tracking-tight mb-3 leading-none">
+          <span className="text-transparent bg-clip-text bg-gradient-to-r from-white via-white to-nma-silver">
+            {user.name.split(' ')[0]}.
+          </span>
+        </h1>
+        <p className="text-nma-silver-dark text-lg max-w-md">
+          Nu e timp de joacă. Continuă construcția.
+        </p>
       </div>
 
-      {/* Warnings / Alerts */}
-      <div className="bg-yellow-500/10 border border-yellow-500/20 rounded-2xl p-4 flex items-start gap-4">
-         <AlertTriangle className="w-5 h-5 text-yellow-500 mt-0.5" />
-         <div>
-           <h4 className="text-yellow-500 font-bold mb-1">Ai atins limita de dispozitive?</h4>
-           <p className="text-sm text-yellow-500/80">Contul tău este conectat pe 2 dispozitive. Dacă te blochezi, accesează secțiunea Sesiuni pentru a revoca accesul unui dispozitiv vechi.</p>
-         </div>
-      </div>
-
-      {/* Stats/Quick Links */}
-      <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
-        <NmaGlassSurface radius="2xl" tone="clear" className="p-6">
-           <div className="text-gray-400 text-sm mb-2 font-medium uppercase tracking-wider">Cursuri Active</div>
-           <div className="text-3xl font-bold text-white">{purchases.length}</div>
+      {/* Stats */}
+      <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+        <NmaGlassSurface radius="2xl" tone="purple" className="p-6 relative overflow-hidden">
+          <div className="absolute top-0 right-0 w-24 h-24 bg-nma-purple/20 blur-2xl rounded-full pointer-events-none" />
+          <div className="text-nma-silver-dark text-xs mb-3 font-bold uppercase tracking-[0.2em]">Cursuri Active</div>
+          <div className="text-5xl font-black text-white">{purchases.length}</div>
+          <div className="text-nma-purple-light text-xs mt-1 uppercase tracking-wider font-semibold">programe</div>
         </NmaGlassSurface>
-        <NmaGlassSurface radius="2xl" tone="clear" className="p-6">
-           <div className="text-gray-400 text-sm mb-2 font-medium uppercase tracking-wider">Status Cont</div>
-           <div className="text-xl font-bold text-green-400">Activ & Protejat</div>
+        <NmaGlassSurface radius="2xl" tone="clear" className="p-6 relative overflow-hidden">
+          <div className="text-nma-silver-dark text-xs mb-3 font-bold uppercase tracking-[0.2em]">Status Cont</div>
+          <div className="text-2xl font-black text-white flex items-center gap-2">
+            <span className="inline-block w-2 h-2 rounded-full bg-green-400 shadow-[0_0_8px_rgba(74,222,128,0.8)]" />
+            Activ
+          </div>
+          <div className="text-nma-silver-dark/60 text-xs mt-1 uppercase tracking-wider font-semibold">& Protejat</div>
         </NmaGlassSurface>
       </div>
 
       {/* My Courses */}
       <div>
         <div className="flex items-center justify-between mb-6">
-          <h2 className="text-2xl font-bold text-white">Cursurile Tale</h2>
-          <Link to="/dashboard/courses" className="text-nma-purple font-sm font-semibold hover:underline flex items-center gap-1">
+          <h2 className="text-2xl font-black text-white tracking-tight">Cursurile Tale</h2>
+          <Link to="/dashboard/courses" className="text-nma-purple-light text-sm font-bold hover:text-white transition-colors flex items-center gap-1 uppercase tracking-wider">
             Vezi toate <ArrowRight className="w-4 h-4" />
           </Link>
         </div>
         
         {myCoursesDetailed.length === 0 ? (
-          <div className="p-8 border border-white/10 rounded-2xl bg-white/[0.02] text-center">
-            <BookOpen className="w-12 h-12 text-gray-500 mx-auto mb-4" />
+          <div className="p-10 border border-nma-purple/15 rounded-2xl bg-nma-purple/[0.04] text-center relative overflow-hidden">
+            <div className="absolute inset-0 bg-[radial-gradient(ellipse_at_center,rgba(139,92,246,0.06)_0%,transparent_70%)] pointer-events-none" />
+            <BookOpen className="w-12 h-12 text-nma-purple/40 mx-auto mb-4" />
             <h3 className="text-xl font-bold text-white mb-2">Nu ai niciun curs activ</h3>
-            <p className="text-gray-400 mb-6">Incepe calatoria chiar acum.</p>
+            <p className="text-nma-silver-dark mb-6">Începe călătoria chiar acum.</p>
           </div>
         ) : (
           <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
@@ -97,7 +105,7 @@ export default function AccountDashboard() {
                             style={{ width: `${Math.min(pct, 100)}%` }}
                           />
                         </div>
-                        <div className={`text-xs text-right ${pct >= 100 ? "text-green-400" : "text-gray-400"}`}>
+                        <div className={`text-xs text-right ${pct >= 100 ? "text-green-400" : "text-nma-silver-dark"}`}>
                           {pct}% {pct >= 100 ? "Finalizat" : ""}
                         </div>
                       </>
@@ -122,7 +130,7 @@ export default function AccountDashboard() {
       {/* Available Courses */}
       {availableCourses.length > 0 && (
          <div>
-            <h2 className="text-2xl font-bold text-white mb-6">Deblochează următorul nivel</h2>
+            <h2 className="text-2xl font-black text-white mb-6 tracking-tight">Deblochează următorul nivel</h2>
             <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
               {availableCourses.map(course => (
                 <NmaGlassSurface
@@ -139,7 +147,7 @@ export default function AccountDashboard() {
                    <div className="p-6 relative z-10 flex flex-col justify-between h-40">
                      <div>
                        <h3 className="text-lg font-bold text-white">{course.title}</h3>
-                       <p className="text-sm text-gray-400 mt-1 line-clamp-2">{course.description}</p>
+                       <p className="text-sm text-nma-silver-dark mt-1 line-clamp-2">{course.description}</p>
                      </div>
                      <div className="flex items-center gap-2 text-nma-purple font-semibold text-sm">
                        Află mai multe <ArrowRight className="w-4 h-4" />
